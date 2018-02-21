@@ -23,5 +23,5 @@ Collected data to be sent over the LoRa network.
 
 1. Easy programmable controller.
 2. Wide usable electronics components.
-3. Parameterizable differential model.
+3. Parameterizable measuring model.
 4. Li-Po battery.
