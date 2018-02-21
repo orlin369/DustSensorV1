@@ -1,10 +1,45 @@
-#include "AppConfiguration.h"
+/*
+
+Copyright (c) [2018] [Orlin Dimitrov]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
+#pragma region Headers
+
+/** \brief Configuration of the device. */
+#include "ApplicationConfiguration.h"
+
+/** \brief The Things Network library for RN2483A. */
 #include <TheThingsNetwork.h>
+
+/** \brief Software serial library. */
 #include <SoftwareSerial.h>
 
-// TODO: Remove keys before upload to the repository.
+#pragma endregion
 
 #pragma region Constants
+
+// TODO: Always remove keys before upload the code.
+
+#error "Update settings below."
 
 /** \brief Set device address. */
 const char *devAddr = "XXXXXXXX";
@@ -47,6 +82,8 @@ void setup()
 	// Setup the fan power pin.
 	pinMode(PIN_DS_FAN_POWER, OUTPUT);
 
+	// Setup the LED power pin.
+	pinMode(PIN_STATUS_LED, OUTPUT);
 
 	// Setup debugging serial port.
 	DEBUG_SERIAL.begin(BAUDRATE_DEBUG_SERIAL);
@@ -56,9 +93,6 @@ void setup()
 	{
 		;
 	}
-
-	// Null terminated string.
-	//TTNPayload_g[256] = '\0';
 
 	// Setup LoRaWAN module serial port.
 	LoRaSerial_g.begin(BAUDRATE_LORA);
@@ -84,7 +118,7 @@ void loop()
 	// Update the time.
 	CurrentMillisL = millis();
 
-	
+	// Execute when the time is come.
 	if (CurrentMillisL - PreviousMillisL >= TASK_RATE)
 	{
 		// save the last time you blinked the LED
@@ -139,8 +173,8 @@ void loop()
 		// Prepare payload of 1 byte to indicate LED status
 		byte payload[1];
 		payload[0] = 72; // H => 72
-		
-		// Send it off
+
+						 // Send it off
 		TTN_g.sendBytes(payload, sizeof(payload));
 	}
 }

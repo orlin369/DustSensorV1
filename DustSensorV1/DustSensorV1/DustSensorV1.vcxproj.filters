@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DiO_DustMesurment_MC.ino" />
+    <None Include="DustSensorV1.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.DiO_DustMesurment_MC.vsarduino.h">
+    <ClInclude Include="__vm\.DustSensorV1.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AppConfiguration.h">
+    <ClInclude Include="ApplicationConfiguration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
