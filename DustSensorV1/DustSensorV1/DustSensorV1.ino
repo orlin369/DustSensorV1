@@ -171,10 +171,10 @@ void loop()
 		String TTNPayloadL = "D:" + sDustDensityL + ";MV:" + sMesuredVoltageL + ";CV:" + sCalculatedVoltageL + "\r\n";
 
 		// Prepare payload of 1 byte to indicate LED status
-		byte payload[1];
-		payload[0] = 72; // H => 72
+		byte payload[TTNPayloadL.length()];
+		TTNPayloadL.getBytes(payload, TTNPayloadL.length());
 
-						 // Send it off
+		// Send it off
 		TTN_g.sendBytes(payload, sizeof(payload));
 	}
 }
