@@ -97,15 +97,15 @@ void setup()
 	// Setup LoRaWAN module serial port.
 	LoRaSerial_g.begin(BAUDRATE_LORA);
 
-	//
-	DEBUG_SERIAL.println("-- RESET");
+	// Reset the module.
 	TTN_g.reset();
+	DEBUG_SERIAL.println("-- RESET");
 
-	//
-	DEBUG_SERIAL.println("-- PERSONALIZE");
+	// Personalize the module.
 	TTN_g.personalize(devAddr, nwkSKey, appSKey);
+	DEBUG_SERIAL.println("-- PERSONALIZE");
 
-	// 
+	// Show the status of the device.
 	DEBUG_SERIAL.println("-- STATUS");
 	TTN_g.showStatus();
 }
@@ -168,17 +168,37 @@ void loop()
 		String sCalculatedVoltageL = String(CalculatedVoltage_g);
 
 		String TTNPayloadL = "D:" + sDustDensityL + ";MV:" + sMesuredVoltageL + ";CV:" + sCalculatedVoltageL + "\r\n";
-		
-		// Print the payload.
-		DEBUG_SERIAL.println(TTNPayloadL);
-		
+				
 		// Prepare payload of 1 byte to indicate LED status
 		byte payload[TTNPayloadL.length()];
 		TTNPayloadL.getBytes(payload, TTNPayloadL.length());
 
 		// Send it off
-		TTN_g.sendBytes(payload, sizeof(payload));
+		ttn_response_t response = TTN_g.sendBytes(payload, sizeof(payload));
 		
+		// Print the payload.
+		DEBUG_SERIAL.println("");
+		DEBUG_SERIAL.print("Sent: ");
+		DEBUG_SERIAL.println(TTNPayloadL);
+		DEBUG_SERIAL.println("");
+
+		if (response == ttn_response_t::TTN_ERROR_SEND_COMMAND_FAILED)
+		{
+			DEBUG_SERIAL.println("Send failed.");
+		}
+		else if (response == ttn_response_t::TTN_ERROR_UNEXPECTED_RESPONSE)
+		{
+			DEBUG_SERIAL.println("Unexpected response.");
+		}
+		else if (response == ttn_response_t::TTN_SUCCESSFUL_TRANSMISSION)
+		{
+			DEBUG_SERIAL.println("Successful transmission.");
+		}
+		else if (response == ttn_response_t::TTN_SUCCESSFUL_RECEIVE)
+		{
+			DEBUG_SERIAL.println("Successful receive.");
+		}
+
 		// Turn off the status LED.
 		digitalWrite(PIN_STATUS_LED, LOW);
 
