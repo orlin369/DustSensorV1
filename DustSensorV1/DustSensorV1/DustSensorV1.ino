@@ -124,9 +124,8 @@ void loop()
 		// save the last time you blinked the LED
 		PreviousMillisL = CurrentMillisL;
 
-		// Debug
-		DEBUG_SERIAL.println("-- LOOP");
-
+		// Turn on the status LED.
+		digitalWrite(PIN_STATUS_LED, HIGH);
 
 		// Turn on the fan power.
 		digitalWrite(PIN_DS_FAN_POWER, HIGH);
@@ -152,7 +151,7 @@ void loop()
 		// 0 - 5 mapped to 0 - 1023 integer values recover voltage.
 		CalculatedVoltage_g = MesuredVoltage_g * (PS_VOLTAGE / 1023);
 
-		// linear equation taken from http://www.howmuchsnow.com/arduino/airquality/
+		// Linear equation taken from http://www.howmuchsnow.com/arduino/airquality/
 		// Chris Nafis (c) 2012
 		DustDensity_g = 0.17 * CalculatedVoltage_g - 0.1;
 
@@ -169,12 +168,19 @@ void loop()
 		String sCalculatedVoltageL = String(CalculatedVoltage_g);
 
 		String TTNPayloadL = "D:" + sDustDensityL + ";MV:" + sMesuredVoltageL + ";CV:" + sCalculatedVoltageL + "\r\n";
-
+		
+		// Print the payload.
+		DEBUG_SERIAL.println(TTNPayloadL);
+		
 		// Prepare payload of 1 byte to indicate LED status
 		byte payload[TTNPayloadL.length()];
 		TTNPayloadL.getBytes(payload, TTNPayloadL.length());
 
 		// Send it off
 		TTN_g.sendBytes(payload, sizeof(payload));
+		
+		// Turn off the status LED.
+		digitalWrite(PIN_STATUS_LED, LOW);
+
 	}
 }
