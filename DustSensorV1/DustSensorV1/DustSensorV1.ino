@@ -85,6 +85,9 @@ void setup()
 	// Setup the LED power pin.
 	pinMode(PIN_STATUS_LED, OUTPUT);
 
+	// Setup the user AP button pin.
+	pinMode(PIN_AP_BUTTON, INPUT);
+
 	// Setup debugging serial port.
 	DEBUG_SERIAL.begin(BAUDRATE_DEBUG_SERIAL);
 

@@ -38,11 +38,18 @@ SOFTWARE.
 #define BAUDRATE_DEBUG_SERIAL 115200
 
 
+/** \brief Status LED pin. */
+#define PIN_STATUS_LED 13
+
+/** \brief User AP button pin. */
+#define PIN_AP_BUTTON 2
+
+
 /** \brief LoRaWAN module RX pin. */
-#define PIN_LORA_RX 2
+#define PIN_LORA_RX 6
 
 /** \brief LoRaWAN module TX pin. */
-#define PIN_LORA_TX 3
+#define PIN_LORA_TX 7
 
 /** \brief LoRaWAN module baud rate. */
 #define BAUDRATE_LORA 57600
@@ -56,9 +63,6 @@ SOFTWARE.
 
 /** \brief Dust sensor measuring pin. */
 #define PIN_DS_MEASURE A2
-
-/** \brief Dust sensor status LED pin. */
-#define PIN_STATUS_LED 13
 
 /** \brief Dust sensor LED power pin. */
 #define PIN_DS_LED_POWER 5
