@@ -27,6 +27,9 @@ SOFTWARE.
 /** \brief Configuration of the device. */
 #include "ApplicationConfiguration.h"
 
+/** \brief GPIO Utilities library. */
+#include "GPIOUtilities.h"
+
 /** \brief The Things Network library for RN2483A. */
 #include <TheThingsNetwork.h>
 
@@ -38,8 +41,6 @@ SOFTWARE.
 #pragma region Constants
 
 // TODO: Always remove keys before upload the code.
-
-#error "Update settings below."
 
 /** \brief Set device address. */
 const char *devAddr = "XXXXXXXX";
