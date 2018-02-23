@@ -131,80 +131,86 @@ void loop()
 		// Turn on the status LED.
 		digitalWrite(PIN_STATUS_LED, HIGH);
 
-		// Turn on the fan power.
-		digitalWrite(PIN_DS_FAN_POWER, HIGH);
-
-		// Turn on the LED power.
-		digitalWrite(PIN_DS_LED_POWER, LOW);
-
-		// Wait
-		delayMicroseconds(SAMPLING_TIME);
-
-		// Read the sensor data. (dust value)
-		MesuredVoltage_g = analogRead(PIN_DS_MEASURE);
-
-		// Wait
-		delayMicroseconds(DELTA_TIME);
-
-		// Turn off the LED power.
-		digitalWrite(PIN_DS_LED_POWER, HIGH);
-
-		// Turn off the fan power.
-		digitalWrite(PIN_DS_FAN_POWER, LOW);
-
-		// 0 - 5 mapped to 0 - 1023 integer values recover voltage.
-		CalculatedVoltage_g = MesuredVoltage_g * (PS_VOLTAGE / 1023);
-
-		// Linear equation taken from http://www.howmuchsnow.com/arduino/airquality/
-		// Chris Nafis (c) 2012
-		DustDensity_g = 0.17 * CalculatedVoltage_g - 0.1;
-
-		// Debug
-		DEBUG_SERIAL.print(" - Raw Signal Value (0-1023): ");
-		DEBUG_SERIAL.println(MesuredVoltage_g);
-		DEBUG_SERIAL.print(" - Voltage: ");
-		DEBUG_SERIAL.println(CalculatedVoltage_g);
-		DEBUG_SERIAL.print(" - Dust Density: ");
-		DEBUG_SERIAL.println(DustDensity_g);
-
-		String sDustDensityL = String(DustDensity_g);
-		String sMesuredVoltageL = String(MesuredVoltage_g);
-		String sCalculatedVoltageL = String(CalculatedVoltage_g);
-
-		String TTNPayloadL = "D:" + sDustDensityL + ";MV:" + sMesuredVoltageL + ";CV:" + sCalculatedVoltageL + "\r\n";
-				
-		// Prepare payload of 1 byte to indicate LED status
-		byte payload[TTNPayloadL.length()];
-		TTNPayloadL.getBytes(payload, TTNPayloadL.length());
-
-		// Send it off
-		ttn_response_t response = TTN_g.sendBytes(payload, sizeof(payload));
-		
-		// Print the payload.
-		DEBUG_SERIAL.println("");
-		DEBUG_SERIAL.print("Sent: ");
-		DEBUG_SERIAL.println(TTNPayloadL);
-		DEBUG_SERIAL.println("");
-
-		if (response == ttn_response_t::TTN_ERROR_SEND_COMMAND_FAILED)
-		{
-			DEBUG_SERIAL.println("Send failed.");
-		}
-		else if (response == ttn_response_t::TTN_ERROR_UNEXPECTED_RESPONSE)
-		{
-			DEBUG_SERIAL.println("Unexpected response.");
-		}
-		else if (response == ttn_response_t::TTN_SUCCESSFUL_TRANSMISSION)
-		{
-			DEBUG_SERIAL.println("Successful transmission.");
-		}
-		else if (response == ttn_response_t::TTN_SUCCESSFUL_RECEIVE)
-		{
-			DEBUG_SERIAL.println("Successful receive.");
-		}
+		// Call the task.
+		measuring_task();
 
 		// Turn off the status LED.
 		digitalWrite(PIN_STATUS_LED, LOW);
 
+	}
+}
+
+void measuring_task()
+{
+	// Turn on the fan power.
+	digitalWrite(PIN_DS_FAN_POWER, HIGH);
+
+	// Turn on the LED power.
+	digitalWrite(PIN_DS_LED_POWER, LOW);
+
+	// Wait
+	delayMicroseconds(SAMPLING_TIME);
+
+	// Read the sensor data. (dust value)
+	MesuredVoltage_g = analogRead(PIN_DS_MEASURE);
+
+	// Wait
+	delayMicroseconds(DELTA_TIME);
+
+	// Turn off the LED power.
+	digitalWrite(PIN_DS_LED_POWER, HIGH);
+
+	// Turn off the fan power.
+	digitalWrite(PIN_DS_FAN_POWER, LOW);
+
+	// 0 - 5 mapped to 0 - 1023 integer values recover voltage.
+	CalculatedVoltage_g = MesuredVoltage_g * (PS_VOLTAGE / 1023);
+
+	// Linear equation taken from http://www.howmuchsnow.com/arduino/airquality/
+	// Chris Nafis (c) 2012
+	DustDensity_g = 0.17 * CalculatedVoltage_g - 0.1;
+
+	// Debug
+	DEBUG_SERIAL.print(" - Raw Signal Value (0-1023): ");
+	DEBUG_SERIAL.println(MesuredVoltage_g);
+	DEBUG_SERIAL.print(" - Voltage: ");
+	DEBUG_SERIAL.println(CalculatedVoltage_g);
+	DEBUG_SERIAL.print(" - Dust Density: ");
+	DEBUG_SERIAL.println(DustDensity_g);
+
+	String sDustDensityL = String(DustDensity_g);
+	String sMesuredVoltageL = String(MesuredVoltage_g);
+	String sCalculatedVoltageL = String(CalculatedVoltage_g);
+
+	String TTNPayloadL = "D:" + sDustDensityL + ";MV:" + sMesuredVoltageL + ";CV:" + sCalculatedVoltageL + "\r\n";
+
+	// Prepare payload of 1 byte to indicate LED status
+	byte payload[TTNPayloadL.length()];
+	TTNPayloadL.getBytes(payload, TTNPayloadL.length());
+
+	// Send it off
+	ttn_response_t response = TTN_g.sendBytes(payload, sizeof(payload));
+
+	// Print the payload.
+	DEBUG_SERIAL.println("");
+	DEBUG_SERIAL.print("Sent: ");
+	DEBUG_SERIAL.println(TTNPayloadL);
+	DEBUG_SERIAL.println("");
+
+	if (response == ttn_response_t::TTN_ERROR_SEND_COMMAND_FAILED)
+	{
+		DEBUG_SERIAL.println("Send failed.");
+	}
+	else if (response == ttn_response_t::TTN_ERROR_UNEXPECTED_RESPONSE)
+	{
+		DEBUG_SERIAL.println("Unexpected response.");
+	}
+	else if (response == ttn_response_t::TTN_SUCCESSFUL_TRANSMISSION)
+	{
+		DEBUG_SERIAL.println("Successful transmission.");
+	}
+	else if (response == ttn_response_t::TTN_SUCCESSFUL_RECEIVE)
+	{
+		DEBUG_SERIAL.println("Successful receive.");
 	}
 }
