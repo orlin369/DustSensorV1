@@ -43,13 +43,13 @@ SOFTWARE.
 // TODO: Always remove keys before upload the code.
 
 /** \brief Set device address. */
-const char *devAddr = "XXXXXXXX";
+const char *DeviceAddress_g = "XXXXXXXX";
 
 /** \brief Set network session key. */
-const char *nwkSKey = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+const char *NetworkSesionKey_g = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
 /** \brief Set application session key. */
-const char *appSKey = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+const char *ApplicationKey_g = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 
 #pragma endregion
 
@@ -106,7 +106,7 @@ void setup()
 	DEBUG_SERIAL.println("-- RESET");
 
 	// Personalize the module.
-	TTN_g.personalize(devAddr, nwkSKey, appSKey);
+	TTN_g.personalize(DeviceAddress_g, NetworkSesionKey_g, ApplicationKey_g);
 	DEBUG_SERIAL.println("-- PERSONALIZE");
 
 	// Show the status of the device.
