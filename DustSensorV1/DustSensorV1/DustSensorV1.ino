@@ -143,7 +143,7 @@ void loop()
 void measuring_task()
 {
 	// Turn on the fan power.
-	digitalWrite(PIN_DS_FAN_POWER, HIGH);
+	ramp_analog_out(PIN_DS_FAN_POWER, 128, 10);
 
 	// Turn on the LED power.
 	digitalWrite(PIN_DS_LED_POWER, LOW);
@@ -161,7 +161,8 @@ void measuring_task()
 	digitalWrite(PIN_DS_LED_POWER, HIGH);
 
 	// Turn off the fan power.
-	digitalWrite(PIN_DS_FAN_POWER, LOW);
+	ramp_analog_out(PIN_DS_FAN_POWER, 0, 10);
+
 
 	// 0 - 5 mapped to 0 - 1023 integer values recover voltage.
 	CalculatedVoltage_g = MesuredVoltage_g * (PS_VOLTAGE / 1023);
